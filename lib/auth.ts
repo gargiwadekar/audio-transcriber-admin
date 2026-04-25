@@ -2,18 +2,21 @@ import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 import { username } from "better-auth/plugins";
 
-import { getEnv } from "@/lib/env";
 import { APP_NAME } from "@/lib/constants";
 import { hashPassword, verifyPassword } from "@/lib/password";
 import { prisma } from "@/lib/prisma";
 
 export const auth = betterAuth({
   appName: APP_NAME,
-  baseURL: getEnv().BETTER_AUTH_URL,
-  secret: getEnv().BETTER_AUTH_SECRET,
+
+  baseURL: process.env.BETTER_AUTH_URL!,
+
+  secret: process.env.BETTER_AUTH_SECRET!,
+
   database: prismaAdapter(prisma, {
     provider: "postgresql",
   }),
+
   emailAndPassword: {
     enabled: true,
     disableSignUp: true,
@@ -23,6 +26,7 @@ export const auth = betterAuth({
       verify: verifyPassword,
     },
   },
+
   user: {
     additionalFields: {
       role: {
@@ -33,6 +37,7 @@ export const auth = betterAuth({
       },
     },
   },
+
   session: {
     expiresIn: 60 * 60 * 24 * 7,
     updateAge: 60 * 60 * 12,
@@ -41,6 +46,6 @@ export const auth = betterAuth({
       maxAge: 60 * 5,
     },
   },
+
   plugins: [username()],
 });
-
