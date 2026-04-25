@@ -1,11 +1,11 @@
 import { GoogleGenAI } from "@google/genai";
 
-import { env } from "@/lib/env";
+import { getEnv } from "@/lib/env";
 import { GEMINI_MODEL } from "@/lib/constants";
 import { stripMarkdownFences } from "@/lib/utils";
 
 const client = new GoogleGenAI({
-  apiKey: env.GEMINI_API_KEY,
+  apiKey: getEnv().GEMINI_API_KEY,
 });
 
 export async function transcribeAudio(params: {
@@ -16,7 +16,7 @@ export async function transcribeAudio(params: {
   const base64Audio = params.audioBuffer.toString("base64");
 
   const response = await client.models.generateContent({
-    model: env.GEMINI_MODEL || GEMINI_MODEL,
+    model: getEnv().GEMINI_MODEL || GEMINI_MODEL,
     contents: [
       {
         role: "user",
